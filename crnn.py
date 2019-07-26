@@ -10,7 +10,7 @@ import tensorflow as tf
 from tensorflow.python.training import moving_averages
 # Importer and Exporting
 # ========
-
+#name variable, default, description
 tf.app.flags.DEFINE_string  ('data_path',  './IEMOCAP1.pkl',   'total dataset includes training set, valid set and test set')
 tf.app.flags.DEFINE_string  ('checkpoint', './checkpoint/',   'the checkpoint dir')
 tf.app.flags.DEFINE_string  ('model_name', 'model.ckpt',      'model name')
@@ -85,7 +85,7 @@ class CRNN(object):
                                      dtype=tf.float32,
                                      initializer=tf.contrib.layers.xavier_initializer())
 
-            b = tf.get_variable(name='bais',
+            b = tf.get_variable(name='bias',
                                 shape=[out_channels],
                                 dtype=tf.float32,
                                 initializer=tf.constant_initializer())
