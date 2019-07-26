@@ -9,7 +9,7 @@ Created on Thu Feb  1 19:05:03 2018
 import numpy as np
 import tensorflow as tf
 import crnn
-import cPickle
+import cPickle # or pickle
 import os
 FLAGS = crnn.FLAGS
 def load_data():
