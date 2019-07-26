@@ -11,7 +11,7 @@ import numpy as np
 import python_speech_features as ps
 import os
 import glob
-import cPickle
+import pickle
 #import base
 #import sigproc
 eps = 1e-5
@@ -20,6 +20,7 @@ def wgn(x, snr):
     xpower = np.sum(x**2)/len(x)
     npower = xpower / snr
     return np.random.randn(len(x)) * np.sqrt(npower)
+# calculate log spectrogram
 def getlogspec(signal,samplerate=16000,winlen=0.02,winstep=0.01,
                nfilt=26,nfft=399,lowfreq=0,highfreq=None,preemph=0.97,
                winfunc=lambda x:np.ones((x,))):
@@ -88,7 +89,7 @@ def generate_label(emotion,classnum):
     return label
 def load_data():
     f = open('./zscore40.pkl','rb')
-    mean1,std1,mean2,std2,mean3,std3 = cPickle.load(f)
+    mean1,std1,mean2,std2,mean3,std3 = pickle.load(f)
     return mean1,std1,mean2,std2,mean3,std3
         
         
@@ -158,6 +159,7 @@ def read_IEMOCAP():
                         if(emotion in ['hap','ang','neu','sad']):
                              data, time, rate = read_file(filename)
                              mel_spec = ps.logfbank(data,rate,nfilt = filter_num)
+                            #tinh first and second order derivative
                              delta1 = ps.delta(mel_spec, 2)
                              delta2 = ps.delta(delta1, 2)
                              #apply zscore
