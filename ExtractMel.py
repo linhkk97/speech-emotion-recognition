@@ -82,10 +82,8 @@ def generate_label(emotion,classnum):
         label = 2
     elif(emotion == 'neu'):
         label = 3
-    elif(emotion == 'fear'):
-        label = 4
     else:
-        label = 5
+        label = 4
     return label
 def load_data():
     f = open('./zscore40.pkl','rb')
@@ -99,7 +97,7 @@ def read_IEMOCAP():
     vnum = 298
     test_num = 420#the number of test 2s segments
     valid_num = 436
-    train_num = 2928
+    train_num = 3548
     filter_num = 40
     pernums_test = np.arange(tnum)#remerber each utterance contain how many segments
     pernums_valid = np.arange(vnum)
@@ -108,10 +106,10 @@ def read_IEMOCAP():
     mean1,std1,mean2,std2,mean3,std3 = load_data()
     
     #2774
-    hapnum = 434#2
-    angnum = 433#0
-    neunum = 1262#3
-    sadnum = 799#1
+    hapnum = 595
+    angnum = 1103
+    neunum = 1708
+    sadnum = 1084
     pernum = 300#np.min([hapnum,angnum,sadnum,neunum])
     #valid_num = divmod((train_num),10)[0]
     train_label = np.empty((train_num,1), dtype = np.int8)
@@ -136,9 +134,8 @@ def read_IEMOCAP():
             sub_dir = os.path.join(rootdir,speaker,'sentences/wav')
             emoevl = os.path.join(rootdir,speaker,'dialog/EmoEvaluation')
             for sess in os.listdir(sub_dir):
-                if(sess[7] == 'i'):
+ #               if(sess[7] == 'i'):
                     emotdir = emoevl+'/'+sess+'.txt'
-                    #emotfile = open(emotdir)
                     emot_map = {}
                     with open(emotdir,'r') as emot_to_read:
                         while True:
@@ -148,12 +145,10 @@ def read_IEMOCAP():
                             if(line[0] == '['):
                                 t = line.split()
                                 emot_map[t[3]] = t[4]
-                                
         
                     file_dir = os.path.join(sub_dir, sess, '*.wav')
                     files = glob.glob(file_dir)
                     for filename in files:
-                        #wavname = filename[-23:-4]
                         wavname = filename.split("/")[-1][:-4]
                         emotion = emot_map[wavname]
                         if(emotion in ['hap','ang','neu','sad']):
@@ -163,7 +158,6 @@ def read_IEMOCAP():
                              delta1 = ps.delta(mel_spec, 2)
                              delta2 = ps.delta(delta1, 2)
                              #apply zscore
-                             
                              time = mel_spec.shape[0] 
                              if(speaker in ['Session1','Session2','Session3','Session4']):
                                  #training set
@@ -300,14 +294,9 @@ def read_IEMOCAP():
                                              valid_emt[emotion] = valid_emt[emotion] + 1
                                              Valid_label[valid_num] = em
                                              valid_num = valid_num + 1
-                                     
-                                    
-                                 
+     
                         else:
                             pass
-    
-    
-    
     hap_index = np.arange(hapnum)
     neu_index = np.arange(neunum)
     sad_index = np.arange(sadnum)
@@ -369,25 +358,17 @@ def read_IEMOCAP():
         np.random.shuffle(arr)
         Train_data = Train_data[arr[0:]]
         Train_label = Train_label[arr[0:]]
-        print train_label.shape
-        print train_emt
-        print test_emt
-        print valid_emt
+        print (train_label.shape)
+        print (train_emt)
+        print (test_emt)
+        print (valid_emt)
         #print test_label[0:500,:]
         #f=open('./CASIA_40_delta.pkl','wb') 
         #output = './IEMOCAP40.pkl'
         output = './IEMOCAP.pkl'
         f=open(output,'wb') 
-        cPickle.dump((Train_data,Train_label,test_data,test_label,valid_data,valid_label,Valid_label,Test_label,pernums_test,pernums_valid),f)
+        pickle.dump((Train_data,Train_label,test_data,test_label,valid_data,valid_label,Valid_label,Test_label,pernums_test,pernums_valid),f)
         f.close()           
     return
-                
-        
-
-
 if __name__=='__main__':
     read_IEMOCAP()
-    #print "test_num:", test_num
-    #print "train_num:", train_num
-#    n = wgn(x, 6)
-#    xn = x+n # 增加了6dBz信噪比噪声的信号
