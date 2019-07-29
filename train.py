@@ -1,11 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  1 19:05:03 2018
-
-@author: hxj
-"""
-
 import numpy as np
 import tensorflow as tf
 import crnn
@@ -17,7 +9,6 @@ def load_data():
     train_data,train_label,test_data,test_label,valid_data,valid_label,Valid_label,\
         Test_label,pernums_test,pernums_valid = cPickle.load(f)
     return train_data,train_label
-
 def dense_to_one_hot(labels_dense, num_classes):
     """Convert class labels from scalars to one-hot vectors."""
     num_labels = labels_dense.shape[0]
